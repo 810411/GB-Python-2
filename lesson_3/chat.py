@@ -1,5 +1,6 @@
 import argparse
 import socket
+import json
 
 ADDRESS = 'localhost'
 PORT = 7777
@@ -17,6 +18,14 @@ def get_client_socket(addr, port):
     s = socket.socket()
     s.connect((addr, port))
     return s
+
+
+def send_data(recipient, data):
+    recipient.send(json.dumps(data).encode('utf-8'))
+
+
+def get_data(sender):
+    return json.loads(sender.recv(1024).decode("utf-8"))
 
 
 def create_parser():

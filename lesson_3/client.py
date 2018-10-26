@@ -1,39 +1,28 @@
-import sys
-import json
-from chat import get_client_socket, create_parser, ADDRESS
-from jim import PRESENCE, MESSAGE
+import chat
+import jim
 
-CLIENT_NAME = 'C0deMaver1ck'
-PRESENCE['user']['account_name'] = MESSAGE['from'] = CLIENT_NAME
-address = ADDRESS
+if __name__ == '__main__':
+    client_name = input('Введите имя: ')
 
-parser = create_parser()
-namespace = parser.parse_args()
+    parser = chat.create_parser()
+    namespace = parser.parse_args()
 
-s = get_client_socket(address, namespace.port)
+    sock = chat.get_client_socket(namespace.addr, namespace.port)
 
-serv_addr = s.getpeername()
-print(f'Connected to server: {serv_addr[0]}:{serv_addr[1]}')
+    serv_addr = sock.getpeername()
+    print(f'Connected to server: {serv_addr[0]}:{serv_addr[1]}')
 
-s.send(json.dumps(PRESENCE).encode('utf-8'))
-
-data = json.loads(s.recv(1024).decode("utf-8"))
-
-if data['response'] in ['200', '400']:
-    print(f'{data["time"]} - {data["from"]}: {data["response"]} - {data["alert"]}')
+    jim.PRESENCE['user']['account_name'] = client_name
+    chat.send_data(sock, jim.PRESENCE)
 
     while True:
-        msg = input('Введите сообщение: ')
-        MESSAGE['message'] = msg
-        s.send(json.dumps(MESSAGE).encode('utf-8'))
+        data = chat.get_data(sock)
 
-        data = json.loads(s.recv(1024).decode("utf-8"))
         if data['response'] != '200':
             break
 
-else:
-    print(f'{data["time"]} - {data["from"]}: {data["response"]} - {data["alert"]}')
+        msg = input('Введите сообщение ("exit" для выхода): ')
+        jim.MESSAGE['message'] = msg
+        chat.send_data(sock, jim.MESSAGE)
 
-s.close()
-
-# Сообщение для сервера 'exit' для завершения сеанса чата.
+    sock.close()
