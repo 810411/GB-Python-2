@@ -7,7 +7,7 @@ if __name__ == '__main__':
     parser = chat.create_parser()
     namespace = parser.parse_args()
 
-    sock = chat.get_server_socket(chat.ADDRESS, namespace.p)
+    sock = chat.get_server_socket(namespace.addr, namespace.port)
 
     serv_addr = sock.getsockname()
     print(f'Server started at {serv_addr[0]}:{serv_addr[1]}')

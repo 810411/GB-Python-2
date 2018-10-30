@@ -30,14 +30,11 @@ def get_data(sender):
 
 def create_parser():
     parser = argparse.ArgumentParser(
-        add_help=False
+        description='JSON instant messaging'
     )
-    parser_group = parser.add_argument_group(title='Parameters')
-    # parser_group.add_argument('--help', '-h', action='help', help='Help')
 
-    parser_group.add_argument('-addr', default=ADDRESS, help='IP address')
-    parser_group.add_argument('-port', type=int, default=PORT, help='TCP port')
-    parser_group.add_argument('-a', default='', help='IP address')
-    parser_group.add_argument('-p', type=int, default=PORT, help='TCP port')
+    parser_group = parser.add_argument_group(title='Parameters')
+    parser_group.add_argument('-a', '--addr', default=ADDRESS, help='IP address')
+    parser_group.add_argument('-p', '--port', type=int, default=PORT, help='TCP port')
 
     return parser
