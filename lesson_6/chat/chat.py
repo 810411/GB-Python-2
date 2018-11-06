@@ -2,6 +2,7 @@ import argparse
 import socket
 import json
 import logging
+import inspect
 from functools import wraps
 
 ADDRESS = 'localhost'
@@ -15,8 +16,9 @@ client_logger = logging.getLogger('chat.client')
 def log(func):
     @wraps(func)
     def call(*args, **kwargs):
-        server_logger.debug(f'Function "{func.__name__}" is called from "{func.__module__}"')
-        client_logger.debug(f'Function "{func.__name__}" is called from "{func.__module__}"')
+        outer_func = inspect.stack()[1][3]
+        server_logger.debug(f'Function "{func.__name__}" is called into "{outer_func}"')
+        client_logger.debug(f'Function "{func.__name__}" is called into "{outer_func}"')
         return func(*args, **kwargs)
     return call
 
