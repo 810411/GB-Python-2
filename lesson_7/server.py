@@ -85,6 +85,8 @@ def mainloop():
                         clients_info[s_client]['in_messages'].clear()
                     except ConnectionResetError as e:
                         logger.error(e)
+                        clients.remove(s_client)
+                        clients_info.pop(s_client)
 
                     if data_out['response'] != '200':
                         clients.remove(s_client)

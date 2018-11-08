@@ -33,7 +33,7 @@ def main():
         r = []
 
         try:
-            r, w, e = select.select([sock], [], [], 0)
+            r, w, e = select.select([sock], [], [], 1)
         except Exception as e:
             pass
 
